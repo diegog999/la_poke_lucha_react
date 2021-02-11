@@ -2,6 +2,10 @@ import "./App.css";
 import { Switch, Route } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+//Material UI
+import CssBaseline from "@material-ui/core/CssBaseline";
+
+//Views
 import Gallery from "./Views/Gallery/";
 import Stage from "./Views/Stage";
 import Score from "./Views/Score";
@@ -15,7 +19,6 @@ const App = () => {
           "https://la-poke-lucha.herokuapp.com/pokemon"
         );
         setPokemon(request.data.data);
-        console.log(request.data.data);
       } catch (e) {
         console.error(Error);
       }
@@ -25,9 +28,18 @@ const App = () => {
 
   return (
     <div className="App">
-      <Stage />
-      <Score />
-      <Gallery pokemon={pokemon} />
+      <CssBaseline />
+      <Switch>
+        <Route exact path="/">
+          <Gallery pokemon={pokemon} />
+        </Route>
+        <Route exact path="/stage">
+          <Stage />
+        </Route>
+        <Route exact path="/score">
+          <Score />
+        </Route>
+      </Switch>
     </div>
   );
 };
