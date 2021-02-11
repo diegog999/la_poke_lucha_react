@@ -2,8 +2,11 @@ import "./App.css";
 import { Switch, Route } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Gallery from "./Views/Gallery/";
+import Stage from "./Views/Stage";
+import Score from "./Views/Score";
 
-function App() {
+const App = () => {
   const [pokemon, setPokemon] = useState();
   useEffect(() => {
     const requestPokemon = async () => {
@@ -11,7 +14,8 @@ function App() {
         const request = await axios.get(
           "https://la-poke-lucha.herokuapp.com/pokemon"
         );
-        setPokemon(request);
+        setPokemon(request.data.data);
+        console.log(request.data.data);
       } catch (e) {
         console.error(Error);
       }
@@ -21,13 +25,11 @@ function App() {
 
   return (
     <div className="App">
-      <Switch>
-        <Route path="/pokemon/:id/:info"></Route>
-        <Route path="/pokemon/:id/">This is the id route</Route>
-        <Route path="/">{JSON.stringify(pokemon)}</Route>
-      </Switch>
+      <Stage />
+      <Score />
+      <Gallery pokemon={pokemon} />
     </div>
   );
-}
+};
 
 export default App;
