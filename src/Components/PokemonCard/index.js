@@ -5,12 +5,14 @@ const PokemonCard = ({ pokemon }) => {
     <>
       {pokemon
         ? pokemon.map((i, index) => (
-            <Grid item xs={12} sm={4} md={3} lg={2}>
+            <Grid key={index} item xs={12} sm={4} md={3} lg={2} xl={1}>
               <Card>
                 <CardMedia
-                  height="300"
+                  style={{ width: "130px", height: "130px" }}
                   component="img"
-                  src="https://picsum.photos/300"
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                    index + 1
+                  }.png`}
                 ></CardMedia>
                 <CardContent>{i.name.english}</CardContent>
               </Card>
