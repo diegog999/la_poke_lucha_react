@@ -1,5 +1,6 @@
 //import "./style.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import PokemonCard from "./Components/PokemonCard.js";
 
 //--Material UI components
 import {
@@ -11,19 +12,37 @@ import {
   CardMedia,
   Typography,
   Box,
+  TextField,
+  Button,
 } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 //--Material UI style
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
   offset: { minHeight: 178 },
+
+  picture: { width: "130px", height: "130px", margin: "auto" },
+
+  searchContainer: { marginRight: "2vw" },
 }));
 
-//import PokemonCard from "../Components/PokemonCard";
+const shuffleArray = (arr) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+};
 
 const Gallery = ({ pokemon }) => {
-  console.log(pokemon);
+  pokemon ? shuffleArray(pokemon) : console.log("sorry but no sorry");
+
   const classes = useStyles();
+  const [filter, setFilter] = useState("");
+  const handleSearch = (e) => {
+    let lcFilter = e.target.value.toLowerCase();
+    setFilter(lcFilter);
+  };
 
   return (
     <>
@@ -39,36 +58,20 @@ const Gallery = ({ pokemon }) => {
             disableGutters={true}
             style={{ width: "1000px" }}
           >
-            <Typography>search</Typography>
-            <Typography>type</Typography>
-            <Typography>sort</Typography>
-            <Typography>random</Typography>
+            <div className={classes.searchContainer}>
+              <SearchIcon />
+              <TextField onChange={handleSearch} label="Pokemon" />
+            </div>
+            <Button>type</Button>
+            <Button>sort</Button>
+            <Button>random</Button>
           </Toolbar>
           <Typography>fight scores</Typography>
         </Box>
       </AppBar>
       <div className={classes.offset} />
       <Grid container spacing={0}>
-        {/* <PokemonCard pokemon={pokemon} /> */}
-
-        {pokemon
-          ? pokemon.map((i, index) => (
-              <Grid key={index} item xs={12} sm={4} md={3} lg={2} xl={1}>
-                <Card square={true}>
-                  <CardMedia
-                    style={{ width: "130px", height: "130px" }}
-                    component="img"
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                      index + 1
-                    }.png`}
-                  ></CardMedia>
-                  <CardContent>{i.name.english}</CardContent>
-                </Card>
-              </Grid>
-            ))
-          : console.log("sorry")}
-
-        {/* {JSON.stringify(pokemon)} */}
+        <PokemonCard pokemon={pokemon} filter={filter} />
       </Grid>
     </>
   );

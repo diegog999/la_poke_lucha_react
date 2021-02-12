@@ -6,9 +6,9 @@ import { useState, useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 //Views
-import Gallery from "./Views/Gallery/";
-import Stage from "./Views/Stage";
-import Score from "./Views/Score";
+import Gallery from "./Gallery.js";
+import Stage from "./Stage.js";
+import Score from "./Score.js";
 
 const App = () => {
   const [pokemon, setPokemon] = useState();
