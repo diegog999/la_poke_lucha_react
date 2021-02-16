@@ -82,7 +82,9 @@ const Gallery = ({ pokemon }) => {
   };
 
   useEffect(() => {
-    handleFiltering();
+    if (nameFilter.length && typeFilter.length) {
+      handleFiltering();
+    }
   }, [nameFilter, typeFilter]);
 
   return (
@@ -141,7 +143,9 @@ const Gallery = ({ pokemon }) => {
       </AppBar>
       <div className={classes.offset} />
       <Grid container spacing={0}>
-        <PokemonCard pokemon={filteredPokemon} />
+        <PokemonCard
+          pokemon={filteredPokemon.length ? filteredPokemon : shuffledPokemon}
+        />
       </Grid>
     </>
   );

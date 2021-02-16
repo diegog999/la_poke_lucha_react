@@ -26,13 +26,11 @@ const colourArray = [
 const getColour = () => {
   let randomIndex = Math.floor(Math.random() * 16);
   let randomColour = colourArray[randomIndex];
-  console.log(randomColour);
+  // console.log(randomColour);
   return randomColour;
 };
 
-const PokemonCard = ({ pokemon }) => {
-  const [colour, setColour] = useState("red");
-  //--JSS classes
+const MakePokemonCard = ({ i, index }) => {
   const useStyles = makeStyles((theme) => ({
     picture: { width: "130px", height: "130px", margin: "auto" },
 
@@ -43,31 +41,32 @@ const PokemonCard = ({ pokemon }) => {
       },
     },
   }));
-
   const classes = useStyles();
 
-  const makePokemonCard = (i, index) => {
-    getColour();
-    return (
-      <Grid item key={index + 1} xs={12} sm={4} md={3} lg={2} xl={1}>
-        <Card square={true} className={classes.pokemonCard}>
-          <CardMedia
-            className={classes.picture}
-            component="img"
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-              index + 1
-            }.png`}
-          ></CardMedia>
-          <CardContent>{i.name.english}</CardContent>
-        </Card>
-      </Grid>
-    );
-  };
+  return (
+    <Grid item key={index + 1} xs={12} sm={4} md={3} lg={2} xl={1}>
+      <Card square={true} className={classes.pokemonCard}>
+        <CardMedia
+          className={classes.picture}
+          component="img"
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+            index + 1
+          }.png`}
+        ></CardMedia>
+        <CardContent>{i.name.english}</CardContent>
+      </Card>
+    </Grid>
+  );
+};
+
+const PokemonCard = ({ pokemon }) => {
+  // const [colour, setColour] = useState("red");
+  //--JSS classes
 
   return (
     <>
       {pokemon
-        ? pokemon.map((i, index) => makePokemonCard(i, index))
+        ? pokemon.map((i, index) => <MakePokemonCard i={i} index={index} />)
         : console.log("sorry")}
     </>
   );
