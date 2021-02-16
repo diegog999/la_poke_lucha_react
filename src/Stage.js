@@ -59,7 +59,6 @@ const Stage = () => {
                 component="img"
                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
               ></CardMedia>
-              <CardContent>fighter #1</CardContent>
             </Card>
             {/* Stats Table */}
             <TableContainer>
@@ -97,7 +96,6 @@ const Stage = () => {
                 component="img"
                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
               ></CardMedia>
-              <CardContent>fighter #2</CardContent>
             </Card>
             {/* Stats Table */}
             <TableContainer>

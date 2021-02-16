@@ -1,20 +1,56 @@
 import { Grid, Card, CardContent, CardMedia } from "@material-ui/core";
 //--Material UI style
 import { makeStyles } from "@material-ui/core/styles";
-const useStyles = makeStyles((theme) => ({
-  //offset for fixed AppBar
-  offset: { minHeight: 178 },
+import { useState } from "react";
 
-  picture: { width: "130px", height: "130px", margin: "auto" },
+//random colour on hover
+const colourArray = [
+  "blue",
+  "blueviolet",
+  "brown",
+  "chartreuse",
+  "coral",
+  "crimson",
+  "deepskyblue",
+  "fuchsia",
+  "gold",
+  "mediumpurple",
+  "hotpink",
+  "lime",
+  "red",
+  "yellow",
+  "orange",
+  "purple",
+];
 
-  searchContainer: { marginRight: "2vw" },
-}));
+const getColour = () => {
+  let randomIndex = Math.floor(Math.random() * 16);
+  let randomColour = colourArray[randomIndex];
+  console.log(randomColour);
+  return randomColour;
+};
 
-const PokemonCard = ({ pokemon, filter }) => {
+const PokemonCard = ({ pokemon }) => {
+  const [colour, setColour] = useState("red");
+  //--JSS classes
+  const useStyles = makeStyles((theme) => ({
+    picture: { width: "130px", height: "130px", margin: "auto" },
+
+    pokemonCard: {
+      background: "white",
+      "&:hover": {
+        background: getColour(),
+      },
+    },
+  }));
+
+  const classes = useStyles();
+
   const makePokemonCard = (i, index) => {
+    getColour();
     return (
-      <Grid key={index + 1} item xs={12} sm={4} md={3} lg={2} xl={1}>
-        <Card square={true}>
+      <Grid item key={index + 1} xs={12} sm={4} md={3} lg={2} xl={1}>
+        <Card square={true} className={classes.pokemonCard}>
           <CardMedia
             className={classes.picture}
             component="img"
@@ -27,15 +63,11 @@ const PokemonCard = ({ pokemon, filter }) => {
       </Grid>
     );
   };
-  const classes = useStyles();
+
   return (
     <>
       {pokemon
-        ? pokemon.map(
-            (i, index) =>
-              i.name.english.toLowerCase().includes(filter) &&
-              makePokemonCard(i, index)
-          )
+        ? pokemon.map((i, index) => makePokemonCard(i, index))
         : console.log("sorry")}
     </>
   );
