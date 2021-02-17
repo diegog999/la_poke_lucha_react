@@ -35,9 +35,8 @@ const App = () => {
         },
       };
       tentativePokemon.push(singlePokemon);
-
-      setPokemon(tentativePokemon);
     });
+    setPokemon(tentativePokemon);
   };
 
   // useEffect(() => {

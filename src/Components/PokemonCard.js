@@ -71,7 +71,6 @@ const MakePokemonCard = ({ p }) => {
 };
 
 const PokemonCard = ({ pokemon }) => {
-  // const [colour, setColour] = useState("red");
   //--JSS classes
   console.log(pokemon);
 
