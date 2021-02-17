@@ -1,7 +1,6 @@
 import { Grid, Card, CardContent, CardMedia } from "@material-ui/core";
 //--Material UI style
 import { makeStyles } from "@material-ui/core/styles";
-import { useState } from "react";
 
 //random colour on hover
 const colourArray = [
@@ -30,7 +29,11 @@ const getColour = () => {
   return randomColour;
 };
 
-const MakePokemonCard = ({ i, index }) => {
+const selectPokemon = (e) => {
+  console.log(e.currentTarget.id);
+};
+
+const MakePokemonCard = ({ p }) => {
   const useStyles = makeStyles((theme) => ({
     picture: { width: "130px", height: "130px", margin: "auto" },
 
@@ -41,19 +44,27 @@ const MakePokemonCard = ({ i, index }) => {
       },
     },
   }));
+
   const classes = useStyles();
 
   return (
-    <Grid item key={index + 1} xs={12} sm={4} md={3} lg={2} xl={1}>
+    <Grid
+      item
+      xs={12}
+      sm={4}
+      md={3}
+      lg={2}
+      xl={1}
+      onClick={selectPokemon}
+      id={p.id}
+    >
       <Card square={true} className={classes.pokemonCard}>
         <CardMedia
           className={classes.picture}
           component="img"
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-            index + 1
-          }.png`}
+          src={p.image_small}
         ></CardMedia>
-        <CardContent>{i.name.english}</CardContent>
+        <CardContent>{p.name}</CardContent>
       </Card>
     </Grid>
   );
@@ -62,11 +73,12 @@ const MakePokemonCard = ({ i, index }) => {
 const PokemonCard = ({ pokemon }) => {
   // const [colour, setColour] = useState("red");
   //--JSS classes
+  console.log(pokemon);
 
   return (
     <>
       {pokemon
-        ? pokemon.map((i, index) => <MakePokemonCard i={i} index={index} />)
+        ? pokemon.map((p, index) => <MakePokemonCard p={p} key={index} />)
         : console.log("sorry")}
     </>
   );

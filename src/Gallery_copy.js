@@ -51,49 +51,48 @@ const showTypes = () => {};
 
 const Gallery = ({ pokemon }) => {
   const classes = useStyles();
-  // pokemon ? console.log("pokemon!") : console.log("sorry but no sorry");
 
-  // console.log(pokemon);
+  console.log(pokemon);
 
   let shuffledPokemon = [];
-  // pokemon
-  //   ? (shuffledPokemon = shuffleArray(pokemon))
-  //   : console.log("sorry but no sorry");
+  pokemon
+    ? (shuffledPokemon = shuffleArray(pokemon))
+    : console.log("sorry but no sorry");
 
-  // console.log(shuffledPokemon);
-  // const [typeFilter, setTypeFilter] = useState("");
+  console.log(shuffledPokemon);
+  const [typeFilter, setTypeFilter] = useState("");
 
-  // const handleTypeFilter = (e) => {
-  //   let type = e.currentTarget.value;
-  //   type = type[0].toUpperCase() + type.slice(1);
-  //   setTypeFilter(type);
-  // };
+  const handleTypeFilter = (e) => {
+    let type = e.currentTarget.value;
+    type = type[0].toUpperCase() + type.slice(1);
+    setTypeFilter(type);
+  };
 
-  // //state var & function for searching pokemon
-  // const [nameFilter, setNameFilter] = useState("");
-  // const [filteredPokemon, setFilteredPokemon] = useState(shuffledPokemon);
+  //state var & function for searching pokemon
+  const [nameFilter, setNameFilter] = useState("");
+  const [filteredPokemon, setFilteredPokemon] = useState(shuffledPokemon);
 
-  // console.log(nameFilter, typeFilter);
+  console.log(nameFilter, typeFilter);
 
-  // const handleSearch = (e) => {
-  //   let lcFilter = e.target.value.toLowerCase();
-  //   setNameFilter(lcFilter);
-  // };
+  const handleSearch = (e) => {
+    let lcFilter = e.target.value.toLowerCase();
+    setNameFilter(lcFilter);
+  };
 
-  // const handleFiltering = () => {
-  //   const pokemonArray = shuffledPokemon.filter(
-  //     (pokemon) =>
-  //       pokemon.name.toLowerCase().includes(nameFilter) &&
-  //       (typeFilter.length ? pokemon.type.includes(typeFilter) : true)
-  //   );
-  //   setFilteredPokemon(pokemonArray);
-  // };
+  const handleFiltering = () => {
+    const pokemonArray = shuffledPokemon.filter(
+      (pokemon) =>
+        pokemon.name.toLowerCase().includes(nameFilter) &&
+        (typeFilter.length ? pokemon.type.includes(typeFilter) : true)
+    );
+    setFilteredPokemon(pokemonArray);
+  };
 
-  // useEffect(() => {
-  //   if (nameFilter.length && typeFilter.length) {
-  //     handleFiltering();
-  //   }
-  // }, [nameFilter, typeFilter]);
+  useEffect(() => {
+    if (nameFilter.length && typeFilter.length) {
+      handleFiltering();
+    }
+  }, [nameFilter, typeFilter]);
 
   return (
     <>
@@ -111,7 +110,7 @@ const Gallery = ({ pokemon }) => {
           <Toolbar disableGutters={true} className={classes.toolbar}>
             <div className={classes.searchContainer}>
               <SearchIcon />
-              {/* <TextField onChange={handleSearch} label="Pokemon" /> */}
+              <TextField onChange={handleSearch} label="Pokemon" />
             </div>
             <Button onClick={showTypes}>type</Button>
             <Button>sort</Button>
@@ -121,7 +120,7 @@ const Gallery = ({ pokemon }) => {
         </Box>
         <Box className={classes.typeDrawer}>
           <Button>All</Button>
-          {/* <Button onClick={handleTypeFilter} value="grass">
+          <Button onClick={handleTypeFilter} value="grass">
             Grass
           </Button>
           <Button onClick={handleTypeFilter} value="poison">
@@ -129,7 +128,7 @@ const Gallery = ({ pokemon }) => {
           </Button>
           <Button onClick={handleTypeFilter} value="fire">
             Fire
-          </Button> */}
+          </Button>
           <Button>Grass</Button>
           <Button>Poison</Button>
           <Button>Fire</Button>
@@ -152,8 +151,9 @@ const Gallery = ({ pokemon }) => {
       <div className={classes.offset} />
       <Grid container spacing={0}>
         <PokemonCard
-          pokemon={shuffledPokemon.length > 1 ? shuffledPokemon : pokemon}
+          pokemon={filteredPokemon.length ? filteredPokemon : shuffledPokemon}
         />
+        {console.log(filteredPokemon)}
       </Grid>
     </>
   );

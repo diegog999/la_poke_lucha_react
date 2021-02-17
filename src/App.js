@@ -11,19 +11,73 @@ import Stage from "./Stage.js";
 import Score from "./Score.js";
 
 const App = () => {
-  const [pokemon, setPokemon] = useState();
+  const [pokemon, setPokemon] = useState([]);
+  // const [fechtAll, setFetchAll] = useState(Date.now());
+
+  const updatePokemon = (response) => {
+    const tentativePokemon = [];
+
+    response.data.data.map((item) => {
+      const singlePokemon = {
+        id: item.id,
+        name: item.name.english,
+        type: item.type,
+        weight: item.weight,
+        image: item.image,
+        image_small: item.image_small,
+        base: {
+          HP: item.base.HP,
+          Attack: item.base.Attack,
+          Defense: item.base.Defense,
+          Speed: item.base.Speed,
+          Special_Attack: item.base.Special_Attack,
+          Special_Defense: item.base.Special_Defense,
+        },
+      };
+      tentativePokemon.push(singlePokemon);
+
+      setPokemon(tentativePokemon);
+    });
+  };
+
+  // useEffect(() => {
+  //   const requestPokemon = async () => {
+  //     try {
+  //       const request = await axios.get(
+  //         "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100"
+  //       );
+  //       setPokemon(request.data.data);
+  //       console.log(request.data.data);
+  //     } catch (e) {
+  //       console.error(Error);
+  //     }
+  //   };
+  //   requestPokemon();
+  // }, []);
+
+  //get 100 pokemon
+  // useEffect(() => {
+  //   const requestPokemon = async () => {
+  //     try {
+  //       const baseURL =
+  //         "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
+
+  //       axios.get(baseURL).then((response) => updatePokemon(response));
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   requestPokemon();
+  // }, []);
+  // console.log(pokemon);
+  ///
   useEffect(() => {
-    const requestPokemon = async () => {
-      try {
-        const request = await axios.get(
-          "https://la-poke-lucha.herokuapp.com/pokemon"
-        );
-        setPokemon(request.data.data);
-      } catch (e) {
-        console.error(Error);
-      }
-    };
-    requestPokemon();
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
+
+    axios
+      .get(baseURL)
+      .then((response) => updatePokemon(response))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
