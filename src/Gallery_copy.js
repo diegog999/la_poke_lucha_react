@@ -160,3 +160,20 @@ const Gallery = ({ pokemon }) => {
 };
 
 export default Gallery;
+
+//get 100 pokemon
+// useEffect(() => {
+//   const requestPokemon = async () => {
+//     try {
+//       const baseURL =
+//         "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
+
+//       axios.get(baseURL).then((response) => updatePokemon(response));
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+//   requestPokemon();
+// }, []);
+// console.log(pokemon);
+///

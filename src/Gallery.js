@@ -11,6 +11,7 @@ import {
   Box,
   TextField,
   Button,
+  Link,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 //--Material UI style
@@ -18,7 +19,7 @@ import { makeStyles } from "@material-ui/core/styles";
 //--JSS classes
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
-  offset: { minHeight: 178 },
+  offset: { minHeight: 287 }, //178
 
   appbar: { padding: "1rem" },
   toolbar: { display: "flex", alignItems: "flex-end" },
@@ -35,72 +36,109 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
     // height: 0,
   },
+
+  selectedFighter: {
+    background: "red",
+  },
 }));
 
-//shuffles pokemon array on load
-const shuffleArray = ([...arr]) => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-};
-
-//shows type drawer on click
-const showTypes = () => {};
-
-const Gallery = ({ pokemon }) => {
+const Gallery = ({
+  pokemon,
+  getMorePokemon,
+  selectedFighter1,
+  selectedFighter2,
+  types,
+  chooseType,
+}) => {
   const classes = useStyles();
-  // pokemon ? console.log("pokemon!") : console.log("sorry but no sorry");
 
-  // console.log(pokemon);
+  // const preventDefault = (event) => event.preventDefault();
+
+  //shuffles pokemon array on load
+  const shuffleArray = ([...arr]) => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
 
   let shuffledPokemon = [];
   pokemon
     ? (shuffledPokemon = shuffleArray(pokemon))
     : console.log("sorry but no sorry");
 
-  console.log(shuffledPokemon);
+  //pagination
+  const handleMorePokemon = () => {
+    getMorePokemon(Date.now());
+  };
+
+  //figher selection
+  const [fighter1, setFighter1] = useState("");
+  const [fighter2, setFighter2] = useState("");
+
+  // selectedFighter1(fighter1);
+
+  //shows type drawer on click
+  const showTypes = () => {};
+
+  //state var & function for filtering pokemon by type
   const [typeFilter, setTypeFilter] = useState("");
 
   const handleTypeFilter = (e) => {
     let type = e.currentTarget.value;
-    type = type[0].toUpperCase() + type.slice(1);
-    setTypeFilter(type);
+    if (type.length) {
+      type = type[0].toUpperCase() + type.slice(1);
+      setTypeFilter(type);
+    } else setTypeFilter(type);
   };
+
+  // const handleFiltering = () => {
+  //   const pokemonArray = shuffledPokemon.filter(
+  //     (pokemon) =>
+  //       pokemon.name.toLowerCase().includes(nameFilter) &&
+  //       (typeFilter.length ? pokemon.type.includes(typeFilter) : true)
+  //   );
+  //   setFilteredPokemon(pokemonArray);
+  // };
 
   //state var & function for searching pokemon
   const [nameFilter, setNameFilter] = useState("");
-  const [filteredPokemon, setFilteredPokemon] = useState(shuffledPokemon);
+  // const [filteredPokemon, setFilteredPokemon] = useState(shuffledPokemon);
 
-  console.log(nameFilter, typeFilter);
+  console.log(`nameFilter:${nameFilter} typeFilter:${typeFilter} `);
 
   const handleSearch = (e) => {
     let lcFilter = e.target.value.toLowerCase();
     setNameFilter(lcFilter);
   };
 
-  const handleFiltering = () => {
-    const pokemonArray = shuffledPokemon.filter(
-      (pokemon) =>
-        pokemon.name.toLowerCase().includes(nameFilter) &&
-        (typeFilter.length ? pokemon.type.includes(typeFilter) : true)
-    );
-    setFilteredPokemon(pokemonArray);
-  };
-
   useEffect(() => {
-    if (nameFilter.length && typeFilter.length) {
-      handleFiltering();
+    if (nameFilter.length || typeFilter.length) {
+      // handleFiltering();
+      chooseType(typeFilter);
     }
   }, [nameFilter, typeFilter]);
+
+  // console.log(fighter1, fighter2);
+
+  useEffect(() => {
+    selectedFighter1(fighter1);
+  }, [fighter1]);
+
+  useEffect(() => {
+    selectedFighter2(fighter2);
+  }, [fighter2]);
 
   return (
     <>
       <AppBar position="fixed" className={classes.appbar}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h2">choose your fighter</Typography>
-          <Box>Fighter 1 / Fighter 2 / Play</Box>
+          <Box className={classes.selectedFighter}>
+            Fighter 1 {fighter1} / Fighter 2 {fighter2}/{" "}
+            <Link href="/stage">Play</Link>
+          </Box>
           <Typography variant="h1">la poke lucha</Typography>
         </Box>
         <Box
@@ -120,40 +158,29 @@ const Gallery = ({ pokemon }) => {
           <Typography>fight scores</Typography>
         </Box>
         <Box className={classes.typeDrawer}>
-          <Button>All</Button>
-          <Button onClick={handleTypeFilter} value="grass">
-            Grass
+          <Button value="All" onClick={handleTypeFilter}>
+            All
           </Button>
-          <Button onClick={handleTypeFilter} value="poison">
-            Poison
-          </Button>
-          <Button onClick={handleTypeFilter} value="fire">
-            Fire
-          </Button>
-          <Button>Grass</Button>
-          <Button>Poison</Button>
-          <Button>Fire</Button>
-          <Button>Grass</Button>
-          <Button>Poison</Button>
-          <Button>Fire</Button>
-          <Button>Grass</Button>
-          <Button>Poison</Button>
-          <Button>Fire</Button>
-          <Button>Grass</Button>
-          <Button>Poison</Button>
-          <Button>Fire</Button>
-          <Button>Grass</Button>
-          <Button>Poison</Button>
-          <Button>Fire</Button>
-          <Button>Grass</Button>
-          <Button>Poison</Button>
+          {types.map((type, index) => (
+            <Button key={index} value={type} onClick={handleTypeFilter}>
+              {type}
+            </Button>
+          ))}
         </Box>
       </AppBar>
       <div className={classes.offset} />
       <Grid container spacing={0}>
         <PokemonCard
-          pokemon={shuffledPokemon.length > 1 ? shuffledPokemon : pokemon}
+          // pokemon={shuffledPokemon.length > 1 ? shuffledPokemon : pokemon}
+          pokemon={shuffledPokemon.length ? shuffledPokemon : pokemon}
+          choosefighter1={(fighter1) => setFighter1(fighter1)}
+          choosefighter2={(fighter2) => setFighter2(fighter2)}
+          fighter1={fighter1}
+          fighter2={fighter2}
         />
+        <Link href="#" onClick={handleMorePokemon}>
+          More Pokemon
+        </Link>
       </Grid>
     </>
   );

@@ -30,8 +30,11 @@ const useStyles = makeStyles((theme) => ({
   table: { width: "25vw", marginLeft: "auto", marginRight: "auto" },
 }));
 
-const Stage = () => {
+const Stage = ({ luchador1, luchador2 }) => {
   const classes = useStyles();
+
+  console.log(luchador1, luchador2);
+
   return (
     <>
       {/* Top Bar */}
@@ -62,7 +65,7 @@ const Stage = () => {
             </Card>
             {/* Stats Table */}
             <TableContainer>
-              <Typography variant="h4">Fighter 1</Typography>
+              <Typography variant="h4">Fighter 1 {luchador1}</Typography>
               <Table className={classes.table}>
                 <TableBody>
                   <TableRow>

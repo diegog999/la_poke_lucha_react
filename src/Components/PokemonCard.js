@@ -29,11 +29,14 @@ const getColour = () => {
   return randomColour;
 };
 
-const selectPokemon = (e) => {
-  console.log(e.currentTarget.id);
-};
-
-const MakePokemonCard = ({ p }) => {
+const MakePokemonCard = ({
+  p,
+  choosefighter1,
+  choosefighter2,
+  fighter1,
+  fighter2,
+}) => {
+  //--JSS classes
   const useStyles = makeStyles((theme) => ({
     picture: { width: "130px", height: "130px", margin: "auto" },
 
@@ -46,6 +49,16 @@ const MakePokemonCard = ({ p }) => {
   }));
 
   const classes = useStyles();
+
+  const selectPokemon = (e) => {
+    if (fighter1 == 0) {
+      choosefighter1(e.currentTarget.id);
+    } else if (fighter2 == 0) {
+      choosefighter2(e.currentTarget.id);
+    } else if (fighter1 !== 0 && fighter2 !== 0) {
+      alert("you have already chosen your two fighters!");
+    }
+  };
 
   return (
     <Grid
@@ -70,14 +83,26 @@ const MakePokemonCard = ({ p }) => {
   );
 };
 
-const PokemonCard = ({ pokemon }) => {
-  //--JSS classes
-  console.log(pokemon);
-
+const PokemonCard = ({
+  pokemon,
+  choosefighter1,
+  choosefighter2,
+  fighter1,
+  fighter2,
+}) => {
   return (
     <>
       {pokemon
-        ? pokemon.map((p, index) => <MakePokemonCard p={p} key={index} />)
+        ? pokemon.map((p, index) => (
+            <MakePokemonCard
+              p={p}
+              key={index}
+              choosefighter1={choosefighter1}
+              choosefighter2={choosefighter2}
+              fighter1={fighter1}
+              fighter2={fighter2}
+            />
+          ))
         : console.log("sorry")}
     </>
   );
