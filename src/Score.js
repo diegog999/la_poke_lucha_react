@@ -1,25 +1,21 @@
-// import "./style.css";
-
 //--Material UI components
-import { AppBar, Box, Container, Grid, Typography } from "@material-ui/core";
+import {
+  AppBar,
+  Box,
+  Container,
+  Typography,
+} from "@material-ui/core";
 //--Material UI style
 import { makeStyles } from "@material-ui/core/styles";
-import { WbIncandescentRounded } from "@material-ui/icons";
+import ScoreCard from "./Components/ScoreCard"
+
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
   offset: theme.mixins.toolbar,
+  scoreCard: { marginBottom: "1rem", padding: "1rem" },
+  heading: { marginBottom: "2rem" },
+  pokeImage: { maxWidth: "200px" },
 }));
-
-const placeholderGames = [
-  {
-    winner: "winner1",
-    looser: "looser1",
-    turns: 2,
-    winnerScore: 34,
-    looserScore: 56,
-    date: "somesdate",
-  },
-];
 
 const Score = ({ games }) => {
   const classes = useStyles();
@@ -37,21 +33,12 @@ const Score = ({ games }) => {
 
       <div className={classes.offset} />
       <div>
-        <Container
-        
-           display="flex"
-         
-          justifyContent="space-around"
-
-                   style={{  border: "1px solid black"  }}
-        
-        >
+        <Container maxWidth="md">
+          <Typography variant="h2" className={classes.heading}>
+            Scores
+          </Typography>
           {games.map((game) => (
-            <div>
-              <p>{game.winner}</p>
-              <p>{game.looser}</p>
-              <p>{game.rounds}</p>
-            </div>
+            <ScoreCard game={game}></ScoreCard>
           ))}
         </Container>
       </div>

@@ -86,8 +86,10 @@ const App = () => {
     axios
       .get(baseURL)
       .then((response) => {
-        if(response.data)
-          (setGames(response.data)
+        console.log(response);
+        if (response.data.data) {
+          setGames(response.data.data);
+        }
       })
       .catch((err) => console.error(err));
   }, []);
