@@ -12,6 +12,7 @@ import Score from "./Score.js";
 
 const App = () => {
   const [pokemon, setPokemon] = useState([]);
+  const [games, setGames] = useState([]);
   // const [fechtAll, setFetchAll] = useState(Date.now());
 
   const updatePokemon = (response) => {
@@ -80,6 +81,17 @@ const App = () => {
       .catch((err) => console.error(err));
   }, []);
 
+  useEffect(() => {
+    const baseURL = "http://localhost:3001/game/all";
+    axios
+      .get(baseURL)
+      .then((response) => {
+        if(response.data)
+          (setGames(response.data)
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div className="App">
       <CssBaseline />
@@ -91,7 +103,7 @@ const App = () => {
           <Stage />
         </Route>
         <Route exact path="/score">
-          <Score />
+          <Score games={games} />
         </Route>
       </Switch>
     </div>
