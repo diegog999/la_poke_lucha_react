@@ -82,7 +82,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const baseURL = "http://localhost:3001/game/all";
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/game/all";
     axios
       .get(baseURL)
       .then((response) => {
