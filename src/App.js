@@ -18,23 +18,23 @@ const App = () => {
   const [types, setTypes] = useState([]);
   const [selectedFighter1, setSelectedFighter1] = useState("");
   const [selectedFighter2, setSelectedFighter2] = useState("");
-  const [luchador1, setLuchador1] = useState();
-  const [luchador2, setLuchador2] = useState();
+  const [luchador1, setLuchador1] = useState("");
+  const [luchador2, setLuchador2] = useState("");
 
-  // const luch1 = useRef();
-  // useEffect(() => {
-  //   luch1.current = selectedFighter1;
-  // });
+  // // const luch1 = useRef();
+  // // useEffect(() => {
+  // //   luch1.current = selectedFighter1;
+  // // });
 
-  const usePrevious = (value) => {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  };
+  // const usePrevious = (value) => {
+  //   const ref = useRef();
+  //   useEffect(() => {
+  //     ref.current = value;
+  //   });
+  //   return ref.current;
+  // };
 
-  const luch1 = usePrevious(selectedFighter1);
+  // const luch1 = usePrevious(selectedFighter1);
 
   //format list of types
   const updateTypes = (response) => {
@@ -180,7 +180,7 @@ const App = () => {
   }, [morePokeTrigger]);
 
   console.log(
-    `type:${type} id1: ${luch1}, id2: ${selectedFighter2}, fighter1: ${luchador1}, fighter2: ${luchador2}`
+    `id1: ${selectedFighter1}, id2: ${selectedFighter2}, fighter1: ${luchador1}, fighter2: ${luchador2}`
   );
 
   return (
@@ -201,10 +201,12 @@ const App = () => {
             selectedFighter2={(selectedFighter2) =>
               setSelectedFighter2(selectedFighter2)
             }
+            luchador1={luchador1}
+            luchador2={luchador2}
           />
         </Route>
         <Route exact path="/stage">
-          <Stage luchador1={luch1} luchador2={luchador2} />
+          <Stage luchador1={luchador1} luchador2={luchador2} />
         </Route>
         <Route exact path="/score">
           <Score />

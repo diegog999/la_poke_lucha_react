@@ -1,5 +1,6 @@
 //import "./style.css";
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import PokemonCard from "./Components/PokemonCard.js";
 
 //--Material UI components
@@ -10,19 +11,32 @@ import {
   Typography,
   Box,
   TextField,
+  InputBase,
   Button,
   Link,
+  Card,
+  CardMedia,
+  CardContent,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 //--Material UI style
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+
 //--JSS classes
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
-  offset: { minHeight: 287 }, //178
+  offset: { minHeight: 250 }, //178
 
-  appbar: { padding: "1rem" },
-  toolbar: { display: "flex", alignItems: "flex-end" },
+  appbar: {
+    padding: "1rem",
+    height: "250px",
+    backgroundColor: "black",
+  },
+
+  toolbar: {
+    display: "flex",
+    alignItems: "flex-end",
+  },
 
   searchContainer: {
     marginRight: "2vw",
@@ -30,17 +44,54 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-end",
   },
 
-  typeDrawer: {
+  typeDrawerOpen: {
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "flex-start",
-    // height: 0,
+    height: "auto",
+    backgroundColor: "black",
+    width: "100vw",
+  },
+
+  typeDrawerClosed: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    height: 0,
+    overflow: "hidden",
   },
 
   selectedFighter: {
-    background: "red",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  luchadorCard: {
+    margin: "0 3%",
+    textAlign: "center",
+  },
+
+  thumbnail: {
+    width: "70px",
+    height: "70px",
+    margin: "auto",
+  },
+
+  morePokeCard: {
+    backgroundColor: "black",
   },
 }));
+
+//menu styling
+const MenuButton = withStyles((theme) => ({
+  root: {
+    color: "white",
+    "&:hover": {
+      color: "red",
+    },
+  },
+}))(Button);
 
 const Gallery = ({
   pokemon,
@@ -49,8 +100,12 @@ const Gallery = ({
   selectedFighter2,
   types,
   chooseType,
+  luchador1,
+  luchador2,
 }) => {
   const classes = useStyles();
+
+  console.log(luchador1, luchador2);
 
   // const preventDefault = (event) => event.preventDefault();
 
@@ -77,10 +132,11 @@ const Gallery = ({
   const [fighter1, setFighter1] = useState("");
   const [fighter2, setFighter2] = useState("");
 
-  // selectedFighter1(fighter1);
-
   //shows type drawer on click
-  const showTypes = () => {};
+  const [typeDrawer, setTypeDrawer] = useState("closed");
+  const showTypes = () => {
+    typeDrawer === "closed" ? setTypeDrawer("open") : setTypeDrawer("closed");
+  };
 
   //state var & function for filtering pokemon by type
   const [typeFilter, setTypeFilter] = useState("");
@@ -106,7 +162,7 @@ const Gallery = ({
   const [nameFilter, setNameFilter] = useState("");
   // const [filteredPokemon, setFilteredPokemon] = useState(shuffledPokemon);
 
-  console.log(`nameFilter:${nameFilter} typeFilter:${typeFilter} `);
+  // console.log(`nameFilter:${nameFilter} typeFilter:${typeFilter} `);
 
   const handleSearch = (e) => {
     let lcFilter = e.target.value.toLowerCase();
@@ -134,12 +190,51 @@ const Gallery = ({
     <>
       <AppBar position="fixed" className={classes.appbar}>
         <Box display="flex" justifyContent="space-between">
-          <Typography variant="h2">choose your fighter</Typography>
+          <Typography
+            variant="h4"
+            style={{ fontFamily: "'Press Start 2P', cursive" }}
+          >
+            choose <br></br>your fighter
+          </Typography>
           <Box className={classes.selectedFighter}>
-            Fighter 1 {fighter1} / Fighter 2 {fighter2}/{" "}
-            <Link href="/stage">Play</Link>
+            {luchador1 ? (
+              <Card square={true} className={classes.luchadorCard}>
+                <CardMedia
+                  className={classes.thumbnail}
+                  component="img"
+                  src={luchador1.image_small}
+                ></CardMedia>
+                <CardContent>Fighter 1: {luchador1.name}</CardContent>
+              </Card>
+            ) : (
+              console.log("no luchador")
+            )}
+
+            {luchador2 ? (
+              <Card square={true} className={classes.luchadorCard}>
+                <CardMedia
+                  className={classes.thumbnail}
+                  component="img"
+                  src={luchador2.image_small}
+                ></CardMedia>
+                <CardContent>Fighter 2: {luchador2.name}</CardContent>
+              </Card>
+            ) : null}
+
+            {luchador1 && luchador2 ? (
+              <NavLink to="/stage">
+                <Link
+                  underline="none"
+                  style={{ margin: "0 2vmax", color: "red", fontSize: "3rem" }}
+                >
+                  Play
+                </Link>
+              </NavLink>
+            ) : null}
           </Box>
-          <Typography variant="h1">la poke lucha</Typography>
+          <Typography variant="h4" style={{ fontFamily: "'Bangers', cursive" }}>
+            la poke lucha
+          </Typography>
         </Box>
         <Box
           display="flex"
@@ -148,23 +243,31 @@ const Gallery = ({
         >
           <Toolbar disableGutters={true} className={classes.toolbar}>
             <div className={classes.searchContainer}>
-              <SearchIcon />
+              <SearchIcon style={{ margin: "0 8px" }} />
               <TextField onChange={handleSearch} label="Pokemon" />
             </div>
-            <Button onClick={showTypes}>type</Button>
-            <Button>sort</Button>
-            <Button>random</Button>
+            <MenuButton onClick={showTypes} color="">
+              type
+            </MenuButton>
+            <MenuButton>sort</MenuButton>
+            <MenuButton>random</MenuButton>
           </Toolbar>
           <Typography>fight scores</Typography>
         </Box>
-        <Box className={classes.typeDrawer}>
-          <Button value="All" onClick={handleTypeFilter}>
+        <Box
+          className={
+            typeDrawer === "closed"
+              ? classes.typeDrawerClosed
+              : classes.typeDrawerOpen
+          }
+        >
+          <MenuButton value="All" onClick={handleTypeFilter}>
             All
-          </Button>
+          </MenuButton>
           {types.map((type, index) => (
-            <Button key={index} value={type} onClick={handleTypeFilter}>
+            <MenuButton key={index} value={type} onClick={handleTypeFilter}>
               {type}
-            </Button>
+            </MenuButton>
           ))}
         </Box>
       </AppBar>
@@ -178,9 +281,21 @@ const Gallery = ({
           fighter1={fighter1}
           fighter2={fighter2}
         />
-        <Link href="#" onClick={handleMorePokemon}>
-          More Pokemon
-        </Link>
+        {pokemon.length ? (
+          <Card className={classes.morePokeCard}>
+            <CardContent>
+              <Link
+                href="#"
+                onClick={handleMorePokemon}
+                // color="white"
+                underline="none"
+                color="Secondary"
+              >
+                More Pokemon
+              </Link>
+            </CardContent>
+          </Card>
+        ) : null}
       </Grid>
     </>
   );

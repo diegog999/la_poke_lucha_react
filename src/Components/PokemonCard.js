@@ -38,9 +38,15 @@ const MakePokemonCard = ({
 }) => {
   //--JSS classes
   const useStyles = makeStyles((theme) => ({
-    picture: { width: "130px", height: "130px", margin: "auto" },
+    picture: {
+      width: "130px",
+      height: "130px",
+      margin: "auto",
+      cursor: "pointer",
+    },
 
     pokemonCard: {
+      textAlign: "center",
       background: "white",
       "&:hover": {
         background: getColour(),
