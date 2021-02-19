@@ -95,33 +95,17 @@ const MenuButton = withStyles((theme) => ({
 
 const Gallery = ({
   pokemon,
+  morePokemon,
   getMorePokemon,
   selectedFighter1,
   selectedFighter2,
+  getSearch,
   types,
   chooseType,
   luchador1,
   luchador2,
 }) => {
   const classes = useStyles();
-
-  console.log(luchador1, luchador2);
-
-  // const preventDefault = (event) => event.preventDefault();
-
-  //shuffles pokemon array on load
-  const shuffleArray = ([...arr]) => {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
-  let shuffledPokemon = [];
-  pokemon
-    ? (shuffledPokemon = shuffleArray(pokemon))
-    : console.log("sorry but no sorry");
 
   //pagination
   const handleMorePokemon = () => {
@@ -149,34 +133,40 @@ const Gallery = ({
     } else setTypeFilter(type);
   };
 
-  // const handleFiltering = () => {
-  //   const pokemonArray = shuffledPokemon.filter(
-  //     (pokemon) =>
-  //       pokemon.name.toLowerCase().includes(nameFilter) &&
-  //       (typeFilter.length ? pokemon.type.includes(typeFilter) : true)
-  //   );
-  //   setFilteredPokemon(pokemonArray);
-  // };
-
   //state var & function for searching pokemon
   const [nameFilter, setNameFilter] = useState("");
-  // const [filteredPokemon, setFilteredPokemon] = useState(shuffledPokemon);
-
-  // console.log(`nameFilter:${nameFilter} typeFilter:${typeFilter} `);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (e) => {
     let lcFilter = e.target.value.toLowerCase();
     setNameFilter(lcFilter);
   };
 
+  const submitSearch = () => {
+    setSearchTerm(nameFilter);
+  };
+
+  // get random Pokemon
+
+  const getRandomPokemon = () => {
+    let randomIndex = Math.floor(Math.random() * 808);
+    console.log(randomIndex);
+    if (!fighter1.length) {
+      setFighter1(randomIndex);
+    } else if (!fighter2.length) {
+      setFighter2(randomIndex);
+    } else {
+      alert("you have chosen two fighters already");
+    }
+  };
+
   useEffect(() => {
     if (nameFilter.length || typeFilter.length) {
       // handleFiltering();
       chooseType(typeFilter);
+      getSearch(searchTerm);
     }
-  }, [nameFilter, typeFilter]);
-
-  // console.log(fighter1, fighter2);
+  }, [searchTerm, typeFilter]);
 
   useEffect(() => {
     selectedFighter1(fighter1);
@@ -206,9 +196,7 @@ const Gallery = ({
                 ></CardMedia>
                 <CardContent>Fighter 1: {luchador1.name}</CardContent>
               </Card>
-            ) : (
-              console.log("no luchador")
-            )}
+            ) : null}
 
             {luchador2 ? (
               <Card square={true} className={classes.luchadorCard}>
@@ -245,12 +233,14 @@ const Gallery = ({
             <div className={classes.searchContainer}>
               <SearchIcon style={{ margin: "0 8px" }} />
               <TextField onChange={handleSearch} label="Pokemon" />
+              <MenuButton onClick={submitSearch} color="">
+                Submit
+              </MenuButton>
             </div>
             <MenuButton onClick={showTypes} color="">
               type
             </MenuButton>
-            <MenuButton>sort</MenuButton>
-            <MenuButton>random</MenuButton>
+            <MenuButton onClick={getRandomPokemon}>random</MenuButton>
           </Toolbar>
           <Typography>fight scores</Typography>
         </Box>
@@ -274,14 +264,13 @@ const Gallery = ({
       <div className={classes.offset} />
       <Grid container spacing={0}>
         <PokemonCard
-          // pokemon={shuffledPokemon.length > 1 ? shuffledPokemon : pokemon}
-          pokemon={shuffledPokemon.length ? shuffledPokemon : pokemon}
+          pokemon={pokemon.length ? pokemon : console.log("loading")}
           choosefighter1={(fighter1) => setFighter1(fighter1)}
           choosefighter2={(fighter2) => setFighter2(fighter2)}
           fighter1={fighter1}
           fighter2={fighter2}
         />
-        {pokemon.length ? (
+        {pokemon.length && morePokemon != 0 ? (
           <Card className={classes.morePokeCard}>
             <CardContent>
               <Link

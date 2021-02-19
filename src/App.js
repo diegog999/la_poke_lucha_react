@@ -14,27 +14,14 @@ const App = () => {
   const [pokemon, setPokemon] = useState([]);
   const [morePokemon, setMorePokemon] = useState("");
   const [morePokeTrigger, setMorePokeTrigger] = useState("");
+  const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [types, setTypes] = useState([]);
   const [selectedFighter1, setSelectedFighter1] = useState("");
   const [selectedFighter2, setSelectedFighter2] = useState("");
   const [luchador1, setLuchador1] = useState("");
   const [luchador2, setLuchador2] = useState("");
-
-  // // const luch1 = useRef();
-  // // useEffect(() => {
-  // //   luch1.current = selectedFighter1;
-  // // });
-
-  // const usePrevious = (value) => {
-  //   const ref = useRef();
-  //   useEffect(() => {
-  //     ref.current = value;
-  //   });
-  //   return ref.current;
-  // };
-
-  // const luch1 = usePrevious(selectedFighter1);
+  const tentativePokemon = [];
 
   //format list of types
   const updateTypes = (response) => {
@@ -45,7 +32,7 @@ const App = () => {
 
   //get list of types
   useEffect(() => {
-    const baseURL = "https://la-poke-lucha.herokuapp.com/types";
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/types";
     axios
       .get(baseURL)
       .then((response) => {
@@ -56,7 +43,6 @@ const App = () => {
 
   //format response for all pokemon
   const updatePokemon = (response) => {
-    const tentativePokemon = [];
     response.data.data.map((item) => {
       const singlePokemon = {
         id: item.id,
@@ -76,6 +62,7 @@ const App = () => {
       };
       tentativePokemon.push(singlePokemon);
     });
+
     setPokemon(tentativePokemon);
   };
 
@@ -123,7 +110,7 @@ const App = () => {
 
   //get fighter1 by id
   useEffect(() => {
-    const baseURL = "https://la-poke-lucha.herokuapp.com/pokemon/";
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon/";
     axios
       .get(baseURL + selectedFighter1)
       .then((response) => {
@@ -134,7 +121,7 @@ const App = () => {
 
   //get fighter2 by id
   useEffect(() => {
-    const baseURL = "https://la-poke-lucha.herokuapp.com/pokemon/";
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon/";
     axios
       .get(baseURL + selectedFighter2)
       .then((response) => {
@@ -143,10 +130,22 @@ const App = () => {
       .catch((err) => console.error(err));
   }, [selectedFighter2]);
 
+  //get up to 100 pokemon by name search
+  useEffect(() => {
+    const baseURL =
+      "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100&name=";
+    axios
+      .get(baseURL + search)
+      .then((response) => {
+        updatePokemon(response);
+      })
+      .catch((err) => console.error(err));
+  }, [search]);
+
   //get 100 pokemon by type
   useEffect(() => {
     const baseURL =
-      "https://la-poke-lucha.herokuapp.com/pokemon?limit=100&type=";
+      "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100&type=";
     axios
       .get(baseURL + type)
       .then((response) => {
@@ -158,7 +157,7 @@ const App = () => {
 
   //get 100 pokemon
   useEffect(() => {
-    const baseURL = "https://la-poke-lucha.herokuapp.com/pokemon?limit=100";
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
     axios
       .get(baseURL)
       .then((response) => {
@@ -179,10 +178,6 @@ const App = () => {
       .catch((err) => console.error(err));
   }, [morePokeTrigger]);
 
-  console.log(
-    `id1: ${selectedFighter1}, id2: ${selectedFighter2}, fighter1: ${luchador1}, fighter2: ${luchador2}`
-  );
-
   return (
     <div className="App">
       <CssBaseline />
@@ -190,9 +185,11 @@ const App = () => {
         <Route exact path="/">
           <Gallery
             pokemon={pokemon}
+            morePokemon={morePokemon}
             getMorePokemon={(morePokeTrigger) =>
               setMorePokeTrigger(morePokeTrigger)
             }
+            getSearch={(search) => setSearch(search)}
             types={types}
             chooseType={(type) => setType(type)}
             selectedFighter1={(selectedFighter1) =>

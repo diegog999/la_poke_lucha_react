@@ -25,7 +25,6 @@ const colourArray = [
 const getColour = () => {
   let randomIndex = Math.floor(Math.random() * 16);
   let randomColour = colourArray[randomIndex];
-  // console.log(randomColour);
   return randomColour;
 };
 
