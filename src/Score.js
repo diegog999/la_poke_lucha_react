@@ -1,10 +1,5 @@
 //--Material UI components
-import {
-  AppBar,
-  Box,
-  Container,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Box, Container, Typography, Divider } from "@material-ui/core";
 //--Material UI style
 import { makeStyles } from "@material-ui/core/styles";
 import ScoreCard from "./Components/ScoreCard"
@@ -13,7 +8,7 @@ import { useState, useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
-  offset: theme.mixins.toolbar,
+  offset: {height: "170px"},
   scoreCard: { marginBottom: "1rem", padding: "1rem" },
   heading: { marginBottom: "2rem" },
   pokeImage: { maxWidth: "200px" },
@@ -55,7 +50,11 @@ const Score = () => {
             Scores
           </Typography>
           {games.map((game) => (
-            <ScoreCard game={game}></ScoreCard>
+            <>
+                {/*<Divider></Divider>*/}
+                <ScoreCard game={game}></ScoreCard>
+                
+            </>
           ))}
         </Container>
       </div>
