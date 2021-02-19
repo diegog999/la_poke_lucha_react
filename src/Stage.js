@@ -131,7 +131,11 @@ const Stage = ({ luchador1, luchador2 }) => {
                   </TableRow>
                   <TableRow>
                     <TableCell align="center">Type</TableCell>
-                    <TableCell align="center">{luchador1.type}</TableCell>
+                    <TableCell align="center">
+                      
+                      {luchador1.type.map((type) => type.name +" ")}
+                    
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell align="center">Weight</TableCell>
@@ -200,7 +204,11 @@ const Stage = ({ luchador1, luchador2 }) => {
                   </TableRow>
                   <TableRow>
                     <TableCell align="center">Type</TableCell>
-                    <TableCell align="center">{luchador2.type}</TableCell>
+                    <TableCell align="center">
+                      
+                      {luchador1.type.map((type) => type.name +" ")}
+                    
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell align="center">Weight</TableCell>
