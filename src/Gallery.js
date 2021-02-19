@@ -112,10 +112,6 @@ const Gallery = ({
     getMorePokemon(Date.now());
   };
 
-  //figher selection
-  const [fighter1, setFighter1] = useState("");
-  const [fighter2, setFighter2] = useState("");
-
   //shows type drawer on click
   const [typeDrawer, setTypeDrawer] = useState("closed");
   const showTypes = () => {
@@ -151,10 +147,10 @@ const Gallery = ({
   const getRandomPokemon = () => {
     let randomIndex = Math.floor(Math.random() * 808);
     console.log(randomIndex);
-    if (!fighter1.length) {
-      setFighter1(randomIndex);
-    } else if (!fighter2.length) {
-      setFighter2(randomIndex);
+    if (!luchador1) {
+      selectedFighter1(randomIndex);
+    } else if (!luchador2) {
+      selectedFighter2(randomIndex);
     } else {
       alert("you have chosen two fighters already");
     }
@@ -167,14 +163,6 @@ const Gallery = ({
       getSearch(searchTerm);
     }
   }, [searchTerm, typeFilter]);
-
-  useEffect(() => {
-    selectedFighter1(fighter1);
-  }, [fighter1]);
-
-  useEffect(() => {
-    selectedFighter2(fighter2);
-  }, [fighter2]);
 
   return (
     <>
@@ -265,10 +253,10 @@ const Gallery = ({
       <Grid container spacing={0}>
         <PokemonCard
           pokemon={pokemon.length ? pokemon : console.log("loading")}
-          choosefighter1={(fighter1) => setFighter1(fighter1)}
-          choosefighter2={(fighter2) => setFighter2(fighter2)}
-          fighter1={fighter1}
-          fighter2={fighter2}
+          choosefighter1={selectedFighter1}
+          choosefighter2={selectedFighter2}
+          fighter1={luchador1 ? luchador1.id : ""}
+          fighter2={luchador2 ? luchador2.id : ""}
         />
         {pokemon.length && morePokemon != 0 ? (
           <Card className={classes.morePokeCard}>
