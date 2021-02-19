@@ -12,7 +12,6 @@ import Score from "./Score.js";
 
 const App = () => {
   const [pokemon, setPokemon] = useState([]);
-  const [games, setGames] = useState([]);
   // const [fechtAll, setFetchAll] = useState(Date.now());
 
   const updatePokemon = (response) => {
@@ -78,19 +77,6 @@ const App = () => {
     axios
       .get(baseURL)
       .then((response) => updatePokemon(response))
-      .catch((err) => console.error(err));
-  }, []);
-
-  useEffect(() => {
-    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/game/all";
-    axios
-      .get(baseURL)
-      .then((response) => {
-        console.log(response);
-        if (response.data.data) {
-          setGames(response.data.data);
-        }
-      })
       .catch((err) => console.error(err));
   }, []);
 
