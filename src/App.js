@@ -91,7 +91,7 @@ const App = () => {
           <Stage />
         </Route>
         <Route exact path="/score">
-          <Score games={games} />
+          <Score />
         </Route>
       </Switch>
     </div>
