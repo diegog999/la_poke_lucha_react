@@ -1,5 +1,5 @@
 //import "./style.css";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import PokemonCard from "./Components/PokemonCard.js";
 
@@ -99,13 +99,15 @@ const Gallery = ({
   getMorePokemon,
   selectedFighter1,
   selectedFighter2,
-  getSearch,
+  updateFilter,
   types,
-  chooseType,
   luchador1,
   luchador2,
 }) => {
   const classes = useStyles();
+  const searchInput = useRef(null);
+
+  console.log(morePokemon);
 
   //pagination
   const handleMorePokemon = () => {
@@ -119,27 +121,10 @@ const Gallery = ({
   };
 
   //state var & function for filtering pokemon by type
-  const [typeFilter, setTypeFilter] = useState("");
-
-  const handleTypeFilter = (e) => {
-    let type = e.currentTarget.value;
-    if (type.length) {
-      type = type[0].toUpperCase() + type.slice(1);
-      setTypeFilter(type);
-    } else setTypeFilter(type);
-  };
-
-  //state var & function for searching pokemon
-  const [nameFilter, setNameFilter] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearch = (e) => {
-    let lcFilter = e.target.value.toLowerCase();
-    setNameFilter(lcFilter);
-  };
 
   const submitSearch = () => {
-    setSearchTerm(nameFilter);
+    console.log(searchInput.current.value);
+    updateFilter({ name: searchInput.current.value, type: "" });
   };
 
   // get random Pokemon
@@ -155,14 +140,6 @@ const Gallery = ({
       alert("you have chosen two fighters already");
     }
   };
-
-  useEffect(() => {
-    if (nameFilter.length || typeFilter.length) {
-      // handleFiltering();
-      chooseType(typeFilter);
-      getSearch(searchTerm);
-    }
-  }, [searchTerm, typeFilter]);
 
   return (
     <>
@@ -220,14 +197,10 @@ const Gallery = ({
           <Toolbar disableGutters={true} className={classes.toolbar}>
             <div className={classes.searchContainer}>
               <SearchIcon style={{ margin: "0 8px" }} />
-              <TextField onChange={handleSearch} label="Pokemon" />
-              <MenuButton onClick={submitSearch} color="">
-                Submit
-              </MenuButton>
+              <TextField inputRef={searchInput} label="Pokemon" />
+              <MenuButton onClick={submitSearch}>Submit</MenuButton>
             </div>
-            <MenuButton onClick={showTypes} color="">
-              type
-            </MenuButton>
+            <MenuButton onClick={showTypes}>type</MenuButton>
             <MenuButton onClick={getRandomPokemon}>random</MenuButton>
           </Toolbar>
           <Typography>fight scores</Typography>
@@ -239,11 +212,18 @@ const Gallery = ({
               : classes.typeDrawerOpen
           }
         >
-          <MenuButton value="All" onClick={handleTypeFilter}>
+          <MenuButton
+            value="All"
+            onClick={() => updateFilter({ name: "", type: "" })}
+          >
             All
           </MenuButton>
           {types.map((type, index) => (
-            <MenuButton key={index} value={type} onClick={handleTypeFilter}>
+            <MenuButton
+              key={index}
+              value={type}
+              onClick={() => updateFilter({ name: "", type: type })}
+            >
               {type}
             </MenuButton>
           ))}
@@ -258,15 +238,14 @@ const Gallery = ({
           fighter1={luchador1 ? luchador1.id : ""}
           fighter2={luchador2 ? luchador2.id : ""}
         />
-        {pokemon.length && morePokemon != 0 ? (
+        {pokemon.length && morePokemon !== "" ? (
           <Card className={classes.morePokeCard}>
             <CardContent>
               <Link
                 href="#"
                 onClick={handleMorePokemon}
-                // color="white"
                 underline="none"
-                color="Secondary"
+                color="primary"
               >
                 More Pokemon
               </Link>
