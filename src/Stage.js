@@ -132,9 +132,7 @@ const Stage = ({ luchador1, luchador2 }) => {
                   <TableRow>
                     <TableCell align="center">Type</TableCell>
                     <TableCell align="center">
-                      
-                      {luchador1.type.map((type) => type.name +" ")}
-                    
+                      {luchador1.type.map((type) => type.name + " ")}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -205,9 +203,9 @@ const Stage = ({ luchador1, luchador2 }) => {
                   <TableRow>
                     <TableCell align="center">Type</TableCell>
                     <TableCell align="center">
-                      
-                      {luchador1.type.map((type) => type.name +" ")}
-                    
+                      {luchador1
+                        ? luchador1.type.map((type) => type.name + "/ ")
+                        : null}
                     </TableCell>
                   </TableRow>
                   <TableRow>

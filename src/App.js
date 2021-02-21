@@ -11,15 +11,18 @@ import Stage from "./Stage.js";
 import Score from "./Score.js";
 
 const App = () => {
-  const [pokemon, setPokemon] = useState([]);
-  const [morePokemon, setMorePokemon] = useState("");
+  const [{ pokemon, nextURL }, setPokemon] = useState({
+    pokemon: [],
+    nextURL: "",
+  });
+
+  console.log(pokemon);
   const [morePokeTrigger, setMorePokeTrigger] = useState("");
-  const [search, setSearch] = useState("");
-  const [type, setType] = useState("");
+  const [filter, setFilter] = useState({ name: "", type: "" });
+
   const [types, setTypes] = useState([]);
   const [luchador1, setLuchador1] = useState("");
   const [luchador2, setLuchador2] = useState("");
-  const tentativePokemon = [];
 
   //format list of types
   const updateTypes = (response) => {
@@ -59,6 +62,7 @@ const App = () => {
 
   //format response for all pokemon
   const updatePokemon = (response) => {
+    const tentativePokemon = [];
     response.data.data.map((item) => {
       const singlePokemon = {
         id: item.id,
@@ -78,8 +82,15 @@ const App = () => {
       };
       tentativePokemon.push(singlePokemon);
     });
-
-    setPokemon(tentativePokemon);
+    filter
+      ? setPokemon({
+          pokemon: tentativePokemon,
+          nextURL: response.data.next ? response.data.next : "",
+        })
+      : setPokemon({
+          pokemon: [...pokemon, ...tentativePokemon],
+          nextURL: response.data.next ? response.data.next : "",
+        });
   };
 
   // format response fighter 1
@@ -124,53 +135,35 @@ const App = () => {
     setLuchador2(singleFighter);
   };
 
-  //get up to 100 pokemon by name search
+  //get up to 100 pokemon by name & type search
   useEffect(() => {
-    const baseURL =
-      "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100&name=";
+    console.log("filter" + JSON.stringify(filter));
+    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
+    let finalURL = baseURL;
+    if (filter.name) {
+      finalURL += `&name=${filter.name}`;
+    }
+    if (filter.type) {
+      finalURL += `&type=${filter.type}`;
+    }
+    console.log(finalURL);
     axios
-      .get(baseURL + search)
+      .get(finalURL)
       .then((response) => {
         updatePokemon(response);
       })
       .catch((err) => console.error(err));
-  }, [search]);
-
-  //get 100 pokemon by type
-  useEffect(() => {
-    const baseURL =
-      "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100&type=";
-    axios
-      .get(baseURL + type)
-      .then((response) => {
-        updatePokemon(response);
-        setMorePokemon(response.data.next);
-      })
-      .catch((err) => console.error(err));
-  }, [type]);
+  }, [filter]);
 
   //get next 100 pokemon
   useEffect(() => {
     axios
-      .get(morePokemon)
+      .get(nextURL)
       .then((response) => {
         updatePokemon(response);
-        setMorePokemon(response.data.next);
       })
       .catch((err) => console.error(err));
   }, [morePokeTrigger]);
-
-  //get 100 pokemon
-  useEffect(() => {
-    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
-    axios
-      .get(baseURL)
-      .then((response) => {
-        updatePokemon(response);
-        setMorePokemon(response.data.next);
-      })
-      .catch((err) => console.error(err));
-  }, []);
 
   return (
     <div className="App">
@@ -179,13 +172,12 @@ const App = () => {
         <Route exact path="/">
           <Gallery
             pokemon={pokemon}
-            morePokemon={morePokemon}
+            morePokemon={nextURL}
             getMorePokemon={(morePokeTrigger) =>
               setMorePokeTrigger(morePokeTrigger)
             }
-            getSearch={(search) => setSearch(search)}
+            updateFilter={(filter) => setFilter(filter)}
             types={types}
-            chooseType={(type) => setType(type)}
             selectedFighter1={(selectedFighter1) =>
               setFighter1Handler(selectedFighter1)
             }
