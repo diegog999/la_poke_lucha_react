@@ -96,6 +96,7 @@ const App = () => {
   // format response fighter 1
   const updateLuchador1 = (item) => {
     const singleFighter = {
+      _id: item._id,
       id: item.id,
       name: item.name.english,
       type: item.type,
@@ -117,6 +118,7 @@ const App = () => {
   // format response fighter 2
   const updateLuchador2 = (item) => {
     const singleFighter = {
+      _id: item._id,
       id: item.id,
       name: item.name.english,
       type: item.type,

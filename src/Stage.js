@@ -1,7 +1,7 @@
 // import "./style.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {sleep, getDamage} from "./util";
+import { sleep, getDamage } from "./util";
 //--Material UI components
 import {
   AppBar,
@@ -17,6 +17,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  LinearProgress,
 } from "@material-ui/core";
 //--Material UI style
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,15 +42,13 @@ const useStyles = makeStyles((theme) => ({
     width: "300px",
     justifyContent: "space-between",
   },
-  stageCard1: {
+  winner: {
     // backgroundColor: "blue",
-    marginBottom: "3vmax",
     border: "solid 5px green",
   },
 
-  stageCard2: {
+  looser: {
     backgroundColor: "red",
-    marginBottom: "3vmax",
     border: "solid 5px red",
   },
   stageCardPic: {
@@ -57,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
     height: "30vmax",
   },
   tableContainer: {
+    marginTop: "3vmax",
     textAlign: "center",
   },
 
@@ -71,53 +71,27 @@ const useStyles = makeStyles((theme) => ({
 const Stage = ({ luchador1, luchador2 }) => {
   const classes = useStyles();
 
-  //console.log(luchador1, luchador2);
-
-  const [pokeTypes, setPokeTypes] = useState({ type1: [], type2: [] });
-  const [hpType, setHpType] = useState({
+  const [fightState, setFightState] = useState({
     health1: luchador1.base.HP,
     health2: luchador2.base.HP,
     turns: 0,
   });
-
-  // winner lefthp + 100
-  //looser 100-lefthpwinner
-  // console.log(pokeTypes);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response1 = await axios.get(
-          `https://la-poke-lucha-dev.herokuapp.com/pokemon/${luchador1.id}/type`
-        );
-        const response2 = await axios.get(
-          `https://la-poke-lucha-dev.herokuapp.com/pokemon/${luchador2.id}/type`
-        );
-        setPokeTypes({
-          type1: response1.data.data,
-          type2: response2.data.data,
-        });
-      } catch {}
-    };
-    fetchData();
-  }, []);
+  const [winner, setWinner] = useState("");
 
   const calculateHpPoints = () => {
-    luchador1.type = pokeTypes.type1;
-    luchador2.type = pokeTypes.type2;
-
-    if (hpType.turns % 2 === 0) {
+    if (fightState.turns % 2 === 0) {
       // value hp luchador2
       //- getDamage()
-      setHpType({
-        health1: hpType.health1,
-        health2: hpType.health2 - getDamage(luchador1, luchador2),
-        turns: hpType.turns + 1,
+      setFightState({
+        health1: fightState.health1,
+        health2: fightState.health2 - getDamage(luchador1, luchador2),
+        turns: fightState.turns + 1,
       });
     } else {
-      setHpType({
-        health1: hpType.health1 - getDamage(luchador2, luchador1),
-        health2: hpType.health2,
-        turns: hpType.turns + 1,
+      setFightState({
+        health1: fightState.health1 - getDamage(luchador2, luchador1),
+        health2: fightState.health2,
+        turns: fightState.turns + 1,
       });
     }
   };
@@ -127,15 +101,51 @@ const Stage = ({ luchador1, luchador2 }) => {
       try {
         await sleep(3000);
         calculateHpPoints();
-        console.log(hpType);
+        console.log(fightState);
       } catch (error) {
         console.log(error);
       }
     };
-    if (hpType.health1 > 0 && hpType.health2 > 0 && hpType.turns < 20) {
+    if (fightState.health1 > 0 && fightState.health2 > 0) {
       fight();
+    } else {
+      let winner;
+      let looser;
+      let winnerScore;
+      let looserScore;
+      if(fightState.health1 <= 0 ) {
+        winner = luchador2;
+        looser = luchador1;
+        winnerScore = 100 + fightState.health2;
+        looserScore = luchador2.base.HP - fightState.health2;
+      } else {
+        winner = luchador1;
+        looser = luchador2;
+        winnerScore = 100 + fightState.health1;
+        looserScore = luchador1.base.HP - fightState.health1;
+      }
+      setWinner(winner.name);
+      axios
+      .post(
+        "https://la-poke-lucha-dev.herokuapp.com/game/insertgame",
+        {
+          winner : winner._id, 
+          looser : looser._id, 
+          turns : fightState.turns , 
+          winnerScore : winnerScore, 
+          looserScore : looserScore
+        }
+        
+      )
+      .then((response) => console.log(response))
+      .catch((e) => console.error(e))
     }
-  }, [hpType]);
+  }, [fightState]);
+
+  const normalise = (hp, maxHp) => {
+    console.log("");
+    return hp < 0 ? 0 : (hp * 100) / maxHp;
+  };
 
   if (luchador1 && luchador2) {
     return (
@@ -151,21 +161,39 @@ const Stage = ({ luchador1, luchador2 }) => {
                 choose <br></br>your fighter
               </Link>
             </Typography>
-
-            <Box className={classes.results}>
-              <Typography variant="h4">Score</Typography>
-              <Box>
-                <Typography>Winner</Typography>
-                <Typography>{luchador1.name}</Typography>
-                <Typography>280</Typography>
+            <Box>
+              <Box className={classes.results}>
+                <Typography variant="h4">Score</Typography>
+                <Box>
+                  <Typography>Fighter 1</Typography>
+                  <Typography>{luchador1.name}</Typography>
+                  <Typography>
+                    {fightState.health1 < 0 ? 0 : fightState.health1}/
+                    {luchador1.base.HP}
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={normalise(fightState.health1, luchador1.base.HP)}
+                  />
+                </Box>
+                <Box>
+                  <Typography>Fighter 2</Typography>
+                  <Typography>{luchador2.name}</Typography>
+                  <Typography>
+                    {fightState.health2 < 0 ? 0 : fightState.health2}/
+                    {luchador2.base.HP}
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={normalise(fightState.health2, luchador2.base.HP)}
+                  />
+                </Box>
               </Box>
               <Box>
-                <Typography>Loser</Typography>
-                <Typography>{luchador2.name}</Typography>
-                <Typography>70</Typography>
+                {fightState.health1 <= 0 ? `${luchador2.name} won!` : null}
+                {fightState.health2 <= 0 ? `${luchador1.name} won!` : null}
               </Box>
             </Box>
-
             <Typography
               variant="h4"
               style={{ fontFamily: "'Bangers', cursive" }}
@@ -184,7 +212,16 @@ const Stage = ({ luchador1, luchador2 }) => {
           >
             {/* FIGHTER 1 */}
             <div>
-              <Card square={true} className={classes.stageCard1}>
+              <Card
+                square={true}
+                className={
+                  !winner
+                    ? null
+                    : winner === luchador1.name
+                    ? classes.winner
+                    : classes.looser
+                }
+              >
                 <CardMedia
                   className={classes.stageCardPic}
                   component="img"
@@ -257,7 +294,16 @@ const Stage = ({ luchador1, luchador2 }) => {
 
             {/* FIGHTER 2 */}
             <div>
-              <Card square={true} className={classes.stageCard2}>
+              <Card
+                square={true}
+                className={
+                  !winner
+                    ? null
+                    : winner === luchador2.name
+                    ? classes.winner
+                    : classes.looser
+                }
+              >
                 <CardMedia
                   className={classes.stageCardPic}
                   component="img"
@@ -334,6 +380,6 @@ const Stage = ({ luchador1, luchador2 }) => {
       </>
     );
   }
-};;
+};
 
 export default Stage;
