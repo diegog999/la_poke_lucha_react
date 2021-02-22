@@ -43,25 +43,28 @@ const App = () => {
   //format response for all pokemon
   const updatePokemon = (response) => {
     const tentativePokemon = [];
-    response.data.data.map((item) => {
-      const singlePokemon = {
-        id: item.id,
-        name: item.name.english,
-        type: item.type,
-        weight: item.weight,
-        image: item.image,
-        image_small: item.image_small,
-        base: {
-          HP: item.base.HP,
-          Attack: item.base.Attack,
-          Defense: item.base.Defense,
-          Speed: item.base.Speed,
-          Special_Attack: item.base.Special_Attack,
-          Special_Defense: item.base.Special_Defense,
-        },
-      };
-      tentativePokemon.push(singlePokemon);
-    });
+    if (response.data.data) {
+      response.data.data.map((item) => {
+        const singlePokemon = {
+          id: item.id,
+          name: item.name.english,
+          type: item.type,
+          weight: item.weight,
+          image: item.image,
+          image_small: item.image_small,
+          base: {
+            HP: item.base.HP,
+            Attack: item.base.Attack,
+            Defense: item.base.Defense,
+            Speed: item.base.Speed,
+            Special_Attack: item.base.Special_Attack,
+            Special_Defense: item.base.Special_Defense,
+          },
+        };
+        tentativePokemon.push(singlePokemon);
+      });
+    }
+
     filter
       ? setPokemon({
           pokemon: tentativePokemon,
@@ -146,7 +149,6 @@ const App = () => {
 
   //get up to 100 pokemon by name & type search
   useEffect(() => {
-    console.log("filter");
     const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
     let finalURL = baseURL;
     if (filter.name) {

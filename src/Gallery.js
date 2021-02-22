@@ -24,7 +24,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 //--JSS classes
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
-  offset: { minHeight: 250 }, //178
+  offset: { minHeight: 285 }, //178
 
   appbar: {
     padding: "1rem",
@@ -72,13 +72,21 @@ const useStyles = makeStyles((theme) => ({
   },
 
   thumbnail: {
-    width: "70px",
-    height: "70px",
-    margin: "auto",
+    width: "77px",
+    height: "77px",
+    margin: "5% auto 0 auto",
   },
 
   morePokeCard: {
     backgroundColor: "black",
+  },
+
+  noDecoration: {
+    textDecoration: "none",
+    color: "inherit",
+    "&:hover": {
+      color: "red",
+    },
   },
 }));
 
@@ -134,7 +142,6 @@ const Gallery = ({
   //state var & function for filtering pokemon by type
 
   const submitSearch = () => {
-    console.log(searchInput.current.value);
     updateFilter({ name: searchInput.current.value, type: "" });
   };
 
@@ -142,7 +149,6 @@ const Gallery = ({
 
   const getRandomPokemon = () => {
     let randomIndex = Math.floor(Math.random() * 808);
-    console.log(randomIndex);
     if (!luchador1) {
       selectedFighter1(randomIndex);
     } else if (!luchador2) {
@@ -156,10 +162,7 @@ const Gallery = ({
     <>
       <AppBar position="fixed" className={classes.appbar}>
         <Box display="flex" justifyContent="space-between">
-          <Typography
-            variant="h4"
-            style={{ fontFamily: "'Press Start 2P', cursive" }}
-          >
+          <Typography variant="h4">
             choose <br></br>your fighter
           </Typography>
           <Box className={classes.selectedFighter}>
@@ -188,19 +191,20 @@ const Gallery = ({
             ) : null}
 
             {luchador1 && luchador2 ? (
-              <NavLink to="/stage">
-                <Link
-                  underline="none"
-                  style={{ margin: "0 2vmax", color: "red", fontSize: "3rem" }}
-                >
-                  Play
-                </Link>
+              <NavLink
+                to="/stage"
+                style={{
+                  margin: "0 2vmax",
+                  color: "red",
+                  fontSize: "3rem",
+                  textDecoration: "none",
+                }}
+              >
+                Play
               </NavLink>
             ) : null}
           </Box>
-          <Typography variant="h4" style={{ fontFamily: "'Bangers', cursive" }}>
-            la poke lucha
-          </Typography>
+          <Typography variant="h3">la poke lucha</Typography>
         </Box>
         <Box
           display="flex"
@@ -216,9 +220,11 @@ const Gallery = ({
             <MenuButton onClick={showTypes}>type</MenuButton>
             <MenuButton onClick={getRandomPokemon}>random</MenuButton>
           </Toolbar>
-          <NavLink to="/score">
-            <Typography>fight scores</Typography>
-          </NavLink>
+          <Typography variant="h6">
+            <NavLink to="/score" className={classes.noDecoration}>
+              fight scores
+            </NavLink>
+          </Typography>
         </Box>
         <Box
           className={
