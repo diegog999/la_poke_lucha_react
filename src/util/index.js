@@ -27,7 +27,7 @@ const getDamage = (attacker, defender) => {
     : 1;
   //Schadensberechnung
   //...
-  console.log("multiplier " + damageMultiplier);
+
   const { Attack, Special_Attack } = attacker.base;
   const attackValue = Attack > Special_Attack ? Attack : Special_Attack;
 
@@ -41,7 +41,7 @@ const getDamage = (attacker, defender) => {
       10) *
       randomNumber) /
     255;
-  console.log(returnValue);
+
   return Math.round(returnValue);
 };
 

@@ -15,8 +15,6 @@ const App = () => {
     pokemon: [],
     nextURL: "",
   });
-
-  console.log(pokemon);
   const [morePokeTrigger, setMorePokeTrigger] = useState("");
   const [filter, setFilter] = useState({ name: "", type: "" });
 
@@ -31,24 +29,6 @@ const App = () => {
     setTypes(arrayofTypes);
   };
 
-  const setFighter1Handler = (id) => {
-    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon/";
-    axios
-      .get(baseURL + id)
-      .then((response) => {
-        updateLuchador1(response.data.data);
-      })
-      .catch((err) => console.error(err));
-  };
-  const setFighter2Handler = (id) => {
-    const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon/";
-    axios
-      .get(baseURL + id)
-      .then((response) => {
-        updateLuchador2(response.data.data);
-      })
-      .catch((err) => console.error(err));
-  };
   //get list of types
   useEffect(() => {
     const baseURL = "https://la-poke-lucha-dev.herokuapp.com/types";
@@ -63,25 +43,28 @@ const App = () => {
   //format response for all pokemon
   const updatePokemon = (response) => {
     const tentativePokemon = [];
-    response.data.data.map((item) => {
-      const singlePokemon = {
-        id: item.id,
-        name: item.name.english,
-        type: item.type,
-        weight: item.weight,
-        image: item.image,
-        image_small: item.image_small,
-        base: {
-          HP: item.base.HP,
-          Attack: item.base.Attack,
-          Defense: item.base.Defense,
-          Speed: item.base.Speed,
-          Special_Attack: item.base.Special_Attack,
-          Special_Defense: item.base.Special_Defense,
-        },
-      };
-      tentativePokemon.push(singlePokemon);
-    });
+    if (response.data.data) {
+      response.data.data.map((item) => {
+        const singlePokemon = {
+          id: item.id,
+          name: item.name.english,
+          type: item.type,
+          weight: item.weight,
+          image: item.image,
+          image_small: item.image_small,
+          base: {
+            HP: item.base.HP,
+            Attack: item.base.Attack,
+            Defense: item.base.Defense,
+            Speed: item.base.Speed,
+            Special_Attack: item.base.Special_Attack,
+            Special_Defense: item.base.Special_Defense,
+          },
+        };
+        tentativePokemon.push(singlePokemon);
+      });
+    }
+
     filter
       ? setPokemon({
           pokemon: tentativePokemon,
@@ -137,9 +120,35 @@ const App = () => {
     setLuchador2(singleFighter);
   };
 
+  const setFighter1Handler = (id) => {
+    if (id === 0) {
+      setLuchador1("");
+    } else {
+      const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon/";
+      axios
+        .get(baseURL + id)
+        .then((response) => {
+          updateLuchador1(response.data.data);
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+  const setFighter2Handler = (id) => {
+    if (id === 0) {
+      setLuchador2("");
+    } else {
+      const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon/";
+      axios
+        .get(baseURL + id)
+        .then((response) => {
+          updateLuchador2(response.data.data);
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
   //get up to 100 pokemon by name & type search
   useEffect(() => {
-    console.log("filter" + JSON.stringify(filter));
     const baseURL = "https://la-poke-lucha-dev.herokuapp.com/pokemon?limit=100";
     let finalURL = baseURL;
     if (filter.name) {
@@ -148,7 +157,6 @@ const App = () => {
     if (filter.type) {
       finalURL += `&type=${filter.type}`;
     }
-    console.log(finalURL);
     axios
       .get(finalURL)
       .then((response) => {

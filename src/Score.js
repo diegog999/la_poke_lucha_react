@@ -12,10 +12,17 @@ import ScoreCard from "./Components/ScoreCard";
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
   offset: { height: "150px" },
-  scoreCard: { marginBottom: "1rem", padding: "1rem" },
+
+  scoreCard: {
+    marginBottom: "1rem",
+    padding: "1rem",
+  },
   heading: { marginBottom: "2rem" },
+
   pokeImage: { maxWidth: "200px" },
+
   list: { textAlign: "center" },
+
   appbar: {
     padding: "1rem",
     height: "150px",
@@ -24,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   noDecoration: {
     textDecoration: "none",
     color: "inherit",
+    "&:hover": {
+      color: "red",
+    },
   },
 }));
 
@@ -58,20 +68,6 @@ const Score = () => {
             </Link>
           </Typography>
 
-          {/*<Box className={classes.results}>
-            <Typography variant="h4">Score</Typography>
-            <Box>
-              <Typography>Winner</Typography>
-              <Typography>{luchador1.name}</Typography>
-              <Typography>280</Typography>
-            </Box>
-            <Box>
-              <Typography>Loser</Typography>
-              <Typography>{luchador2.name}</Typography>
-              <Typography>70</Typography>
-            </Box>
-  </Box>*/}
-
           <Typography variant="h4" style={{ fontFamily: "'Bangers', cursive" }}>
             la poke lucha
           </Typography>
@@ -84,10 +80,10 @@ const Score = () => {
           <Typography variant="h2" className={classes.heading}>
             Scores
           </Typography>
-          {games.map((game) => (
+          {games.map((game, index) => (
             <>
               {/*<Divider></Divider>*/}
-              <ScoreCard game={game}></ScoreCard>
+              <ScoreCard key={index} game={game}></ScoreCard>
             </>
           ))}
         </Container>

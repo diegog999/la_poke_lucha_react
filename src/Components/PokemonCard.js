@@ -108,7 +108,7 @@ const PokemonCard = ({
               fighter2={fighter2}
             />
           ))
-        : console.log("sorry")}
+        : console.log("no pokemon yet")}
     </>
   );
 };

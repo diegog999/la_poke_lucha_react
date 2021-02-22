@@ -11,7 +11,6 @@ import {
   Typography,
   Box,
   TextField,
-  InputBase,
   Button,
   Link,
   Card,
@@ -25,11 +24,11 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 //--JSS classes
 const useStyles = makeStyles((theme) => ({
   //offset for fixed AppBar
-  offset: { minHeight: 250 }, //178
+  offset: { minHeight: 285 }, //178
 
   appbar: {
     padding: "1rem",
-    height: "250px",
+    minHeight: "250px",
     backgroundColor: "black",
   },
 
@@ -73,13 +72,21 @@ const useStyles = makeStyles((theme) => ({
   },
 
   thumbnail: {
-    width: "70px",
-    height: "70px",
-    margin: "auto",
+    width: "77px",
+    height: "77px",
+    margin: "5% auto 0 auto",
   },
 
   morePokeCard: {
     backgroundColor: "black",
+  },
+
+  noDecoration: {
+    textDecoration: "none",
+    color: "inherit",
+    "&:hover": {
+      color: "red",
+    },
   },
 }));
 
@@ -107,7 +114,14 @@ const Gallery = ({
   const classes = useStyles();
   const searchInput = useRef(null);
 
-  console.log(morePokemon);
+  //reset fighters to 0
+  const resetFighter1 = () => {
+    selectedFighter1(0);
+  };
+
+  const resetFighter2 = () => {
+    selectedFighter2(0);
+  };
 
   //pagination
   const handleMorePokemon = () => {
@@ -117,13 +131,17 @@ const Gallery = ({
   //shows type drawer on click
   const [typeDrawer, setTypeDrawer] = useState("closed");
   const showTypes = () => {
-    typeDrawer === "closed" ? setTypeDrawer("open") : setTypeDrawer("closed");
+    if (typeDrawer === "closed") {
+      setTypeDrawer("open");
+    } else {
+      setTypeDrawer("closed");
+      updateFilter({ name: "", type: "" });
+    }
   };
 
   //state var & function for filtering pokemon by type
 
   const submitSearch = () => {
-    console.log(searchInput.current.value);
     updateFilter({ name: searchInput.current.value, type: "" });
   };
 
@@ -131,7 +149,6 @@ const Gallery = ({
 
   const getRandomPokemon = () => {
     let randomIndex = Math.floor(Math.random() * 808);
-    console.log(randomIndex);
     if (!luchador1) {
       selectedFighter1(randomIndex);
     } else if (!luchador2) {
@@ -145,10 +162,7 @@ const Gallery = ({
     <>
       <AppBar position="fixed" className={classes.appbar}>
         <Box display="flex" justifyContent="space-between">
-          <Typography
-            variant="h4"
-            style={{ fontFamily: "'Press Start 2P', cursive" }}
-          >
+          <Typography variant="h4">
             choose <br></br>your fighter
           </Typography>
           <Box className={classes.selectedFighter}>
@@ -160,6 +174,7 @@ const Gallery = ({
                   src={luchador1.image_small}
                 ></CardMedia>
                 <CardContent>Fighter 1: {luchador1.name}</CardContent>
+                <Button onClick={resetFighter1}>Reset</Button>
               </Card>
             ) : null}
 
@@ -171,23 +186,25 @@ const Gallery = ({
                   src={luchador2.image_small}
                 ></CardMedia>
                 <CardContent>Fighter 2: {luchador2.name}</CardContent>
+                <Button onClick={resetFighter2}>Reset</Button>
               </Card>
             ) : null}
 
             {luchador1 && luchador2 ? (
-              <NavLink to="/stage">
-                <Link
-                  underline="none"
-                  style={{ margin: "0 2vmax", color: "red", fontSize: "3rem" }}
-                >
-                  Play
-                </Link>
+              <NavLink
+                to="/stage"
+                style={{
+                  margin: "0 2vmax",
+                  color: "red",
+                  fontSize: "3rem",
+                  textDecoration: "none",
+                }}
+              >
+                Play
               </NavLink>
             ) : null}
           </Box>
-          <Typography variant="h4" style={{ fontFamily: "'Bangers', cursive" }}>
-            la poke lucha
-          </Typography>
+          <Typography variant="h3">la poke lucha</Typography>
         </Box>
         <Box
           display="flex"
@@ -203,9 +220,11 @@ const Gallery = ({
             <MenuButton onClick={showTypes}>type</MenuButton>
             <MenuButton onClick={getRandomPokemon}>random</MenuButton>
           </Toolbar>
-          <NavLink to="/score">
-            <Typography>fight scores</Typography>
-          </NavLink>
+          <Typography variant="h6">
+            <NavLink to="/score" className={classes.noDecoration}>
+              fight scores
+            </NavLink>
+          </Typography>
         </Box>
         <Box
           className={
