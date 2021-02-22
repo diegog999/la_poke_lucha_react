@@ -203,7 +203,9 @@ const Gallery = ({
             <MenuButton onClick={showTypes}>type</MenuButton>
             <MenuButton onClick={getRandomPokemon}>random</MenuButton>
           </Toolbar>
-          <Typography>fight scores</Typography>
+          <NavLink to="/score">
+            <Typography>fight scores</Typography>
+          </NavLink>
         </Box>
         <Box
           className={

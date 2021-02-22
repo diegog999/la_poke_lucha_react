@@ -1,5 +1,6 @@
 // import "./style.css";
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { sleep, getDamage } from "./util";
 //--Material UI components
@@ -113,7 +114,7 @@ const Stage = ({ luchador1, luchador2 }) => {
       let looser;
       let winnerScore;
       let looserScore;
-      if(fightState.health1 <= 0 ) {
+      if (fightState.health1 <= 0) {
         winner = luchador2;
         looser = luchador1;
         winnerScore = 100 + fightState.health2;
@@ -126,19 +127,15 @@ const Stage = ({ luchador1, luchador2 }) => {
       }
       setWinner(winner.name);
       axios
-      .post(
-        "https://la-poke-lucha-dev.herokuapp.com/game/insertgame",
-        {
-          winner : winner._id, 
-          looser : looser._id, 
-          turns : fightState.turns , 
-          winnerScore : winnerScore, 
-          looserScore : looserScore
-        }
-        
-      )
-      .then((response) => console.log(response))
-      .catch((e) => console.error(e))
+        .post("https://la-poke-lucha-dev.herokuapp.com/game/insertgame", {
+          winner: winner._id,
+          looser: looser._id,
+          turns: fightState.turns,
+          winnerScore: winnerScore,
+          looserScore: looserScore,
+        })
+        .then((response) => console.log(response))
+        .catch((e) => console.error(e));
     }
   }, [fightState]);
 
@@ -201,6 +198,9 @@ const Stage = ({ luchador1, luchador2 }) => {
               la poke lucha
             </Typography>
           </Box>
+          <NavLink to="/score">
+            <Typography>fight scores</Typography>
+          </NavLink>
         </AppBar>
         <div className={classes.offset} />
         {/* Stage */}
