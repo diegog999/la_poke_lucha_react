@@ -11,7 +11,6 @@ import {
   Typography,
   Box,
   TextField,
-  InputBase,
   Button,
   Link,
   Card,
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
   appbar: {
     padding: "1rem",
-    height: "250px",
+    minHeight: "250px",
     backgroundColor: "black",
   },
 
@@ -107,7 +106,14 @@ const Gallery = ({
   const classes = useStyles();
   const searchInput = useRef(null);
 
-  console.log(morePokemon);
+  //reset fighters to 0
+  const resetFighter1 = () => {
+    selectedFighter1(0);
+  };
+
+  const resetFighter2 = () => {
+    selectedFighter2(0);
+  };
 
   //pagination
   const handleMorePokemon = () => {
@@ -117,7 +123,12 @@ const Gallery = ({
   //shows type drawer on click
   const [typeDrawer, setTypeDrawer] = useState("closed");
   const showTypes = () => {
-    typeDrawer === "closed" ? setTypeDrawer("open") : setTypeDrawer("closed");
+    if (typeDrawer === "closed") {
+      setTypeDrawer("open");
+    } else {
+      setTypeDrawer("closed");
+      updateFilter({ name: "", type: "" });
+    }
   };
 
   //state var & function for filtering pokemon by type
@@ -160,6 +171,7 @@ const Gallery = ({
                   src={luchador1.image_small}
                 ></CardMedia>
                 <CardContent>Fighter 1: {luchador1.name}</CardContent>
+                <Button onClick={resetFighter1}>Reset</Button>
               </Card>
             ) : null}
 
@@ -171,6 +183,7 @@ const Gallery = ({
                   src={luchador2.image_small}
                 ></CardMedia>
                 <CardContent>Fighter 2: {luchador2.name}</CardContent>
+                <Button onClick={resetFighter2}>Reset</Button>
               </Card>
             ) : null}
 
