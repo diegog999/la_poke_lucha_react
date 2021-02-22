@@ -7,14 +7,11 @@ import { sleep, getDamage } from "./util";
 import {
   AppBar,
   Box,
-  Button,
   Card,
-  CardContent,
   CardMedia,
   Typography,
   Table,
   TableContainer,
-  TableHead,
   TableBody,
   TableRow,
   TableCell,
@@ -26,12 +23,12 @@ import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   appbar: {
     padding: "1rem",
-    height: "200px",
+    minHeight: "200px",
     backgroundColor: "black",
   },
 
   //offset for fixed AppBar
-  offset: { minHeight: "280px" },
+  offset: { minHeight: "320px" },
 
   container: {
     width: "80vw",
@@ -40,9 +37,16 @@ const useStyles = makeStyles((theme) => ({
   },
   results: {
     display: "flex",
-    width: "300px",
+    width: "14.2rem",
     justifyContent: "space-between",
   },
+
+  resultMessage: {
+    fontSize: "2rem",
+    marginTop: "0.5rem",
+    color: "rgb(238, 130, 238)",
+  },
+
   winner: {
     // backgroundColor: "blue",
     border: "solid 5px green",
@@ -66,6 +70,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "3vmax",
     marginLeft: "auto",
     marginRight: "auto",
+  },
+
+  noDecoration: {
+    textDecoration: "none",
+    color: "inherit",
+    "&:hover": {
+      color: "red",
+    },
   },
 }));
 
@@ -102,7 +114,6 @@ const Stage = ({ luchador1, luchador2 }) => {
       try {
         await sleep(3000);
         calculateHpPoints();
-        console.log(fightState);
       } catch (error) {
         console.log(error);
       }
@@ -140,7 +151,6 @@ const Stage = ({ luchador1, luchador2 }) => {
   }, [fightState]);
 
   const normalise = (hp, maxHp) => {
-    console.log("");
     return hp < 0 ? 0 : (hp * 100) / maxHp;
   };
 
@@ -150,17 +160,14 @@ const Stage = ({ luchador1, luchador2 }) => {
         {/* Top Bar */}
         <AppBar position="fixed" className={classes.appbar}>
           <Box display="flex" justifyContent="space-between">
-            <Typography
-              variant="h4"
-              style={{ fontFamily: "'Press Start 2P', cursive" }}
-            >
-              <Link to="/">
+            <Typography variant="h4">
+              <Link to="/" className={classes.noDecoration}>
                 choose <br></br>your fighter
               </Link>
             </Typography>
             <Box>
+              <Typography variant="h5">Score</Typography>
               <Box className={classes.results}>
-                <Typography variant="h4">Score</Typography>
                 <Box>
                   <Typography>Fighter 1</Typography>
                   <Typography>{luchador1.name}</Typography>
@@ -187,20 +194,29 @@ const Stage = ({ luchador1, luchador2 }) => {
                 </Box>
               </Box>
               <Box>
-                {fightState.health1 <= 0 ? `${luchador2.name} won!` : null}
-                {fightState.health2 <= 0 ? `${luchador1.name} won!` : null}
+                {fightState.health1 <= 0 ? (
+                  <Typography className={classes.resultMessage}>
+                    {luchador2.name} won!
+                  </Typography>
+                ) : null}
+                {fightState.health2 <= 0 ? (
+                  <Typography className={classes.resultMessage}>
+                    {luchador1.name} won!
+                  </Typography>
+                ) : null}
               </Box>
             </Box>
-            <Typography
-              variant="h4"
-              style={{ fontFamily: "'Bangers', cursive" }}
-            >
-              la poke lucha
-            </Typography>
+            <Typography variant="h3">la poke lucha</Typography>
           </Box>
-          <NavLink to="/score">
-            <Typography>fight scores</Typography>
-          </NavLink>
+          <Typography variant="h6">
+            <NavLink
+              to="/score"
+              className={classes.noDecoration}
+              style={{ textAlign: "right" }}
+            >
+              fight scores
+            </NavLink>
+          </Typography>
         </AppBar>
         <div className={classes.offset} />
         {/* Stage */}
@@ -276,12 +292,6 @@ const Stage = ({ luchador1, luchador2 }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell align="center">Special Attack</TableCell>
-                      <TableCell align="center">
-                        {luchador1.base.Special_Attack}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
                       <TableCell align="center">Special Defense</TableCell>
                       <TableCell align="center">
                         {luchador1.base.Special_Defense}
@@ -323,7 +333,7 @@ const Stage = ({ luchador1, luchador2 }) => {
                       <TableCell align="center">Type</TableCell>
                       <TableCell align="center">
                         {luchador1
-                          ? luchador1.type.map((type) => type.name + "/ ")
+                          ? luchador1.type.map((type) => type.name + " ")
                           : null}
                       </TableCell>
                     </TableRow>
@@ -351,12 +361,6 @@ const Stage = ({ luchador1, luchador2 }) => {
                       <TableCell align="center">Speed</TableCell>
                       <TableCell align="center">
                         {luchador2.base.Speed}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">Special Attack</TableCell>
-                      <TableCell align="center">
-                        {luchador2.base.Special_Attack}
                       </TableCell>
                     </TableRow>
                     <TableRow>
