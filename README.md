@@ -3,7 +3,13 @@
 * Material UI
 * Netlifly
 
+![Screenshot 2021-02-23 at 13 57 09](https://user-images.githubusercontent.com/74352389/108847040-808fda00-75df-11eb-97cf-9ad0b8f86e38.png)
+
+![Screenshot 2021-02-23 at 13 57 18](https://user-images.githubusercontent.com/74352389/108847088-8dacc900-75df-11eb-93ff-56c941284aa1.png)
+
 # Wireframe 
+
+
 -------------
 # Getting Started with Create React App
 
