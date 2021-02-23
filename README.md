@@ -1,7 +1,7 @@
 # Technologies used
-* React
-* Material UI
-* Netlifly
+* [React](https://reactjs.org/docs/hello-world.html)
+* [Material UI](https://material-ui.com/)
+* [Netlifly](https://www.netlify.com/)
 
 ![Screenshot 2021-02-23 at 13 57 09](https://user-images.githubusercontent.com/74352389/108847040-808fda00-75df-11eb-97cf-9ad0b8f86e38.png)
 
