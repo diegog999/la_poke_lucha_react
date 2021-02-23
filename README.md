@@ -9,6 +9,9 @@
 
 # Wireframe 
 
+![Lapokeluchawireframe](https://user-images.githubusercontent.com/74352389/108847496-0f9cf200-75e0-11eb-96f8-1ee294031ab9.png)
+
+![LaPokeluchaviewscomponents](https://user-images.githubusercontent.com/74352389/108847504-1297e280-75e0-11eb-99ad-519a93ea69bb.png)
 
 -------------
 # Getting Started with Create React App
